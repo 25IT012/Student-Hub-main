@@ -1,0 +1,228 @@
+/* ========================================================
+   StudentHub - Data Components (Search, Filter, Sort, Pagination)
+   ======================================================== */
+
+/* Data Toolbar */
+.data-toolbar {
+    background: #ffffff;
+    padding: 18px 24px;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+    margin: 25px auto;
+    max-width: 1200px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.toolbar-left,
+.toolbar-right {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.toolbar-left {
+    flex: 1;
+    min-width: 260px;
+}
+
+/* Search Input */
+.search-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+}
+
+.search-wrapper input {
+    width: 100%;
+    padding: 10px 14px 10px 38px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.25s ease;
+    background: #f8fafc;
+}
+
+.search-wrapper input:focus {
+    border-color: #0D6EFD;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 14px;
+    pointer-events: none;
+}
+
+/* Filter & Sort Dropdowns */
+.select-wrapper select {
+    padding: 10px 32px 10px 14px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #334155;
+    background-color: #f8fafc;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.25s ease;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 14px;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.select-wrapper select:focus {
+    border-color: #0D6EFD;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+/* Results Count */
+.results-count {
+    font-size: 13px;
+    font-weight: 500;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+/* Pagination Bar */
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 35px 0 20px 0;
+    flex-wrap: wrap;
+}
+
+.pagination-btn {
+    background: #ffffff;
+    color: #334155;
+    border: 1.5px solid #e2e8f0;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 38px;
+    text-align: center;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #0D6EFD;
+    color: #ffffff;
+    border-color: #0D6EFD;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.25);
+}
+
+.pagination-btn.active {
+    background: #0D6EFD;
+    color: #ffffff;
+    border-color: #0D6EFD;
+    box-shadow: 0 3px 8px rgba(13, 110, 253, 0.3);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background: #f1f5f9;
+    border-color: #e2e8f0;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    background: #ffffff;
+    border-radius: 14px;
+    border: 2px dashed #cbd5e1;
+    margin: 25px 0;
+}
+
+.empty-state-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+.empty-state h3 {
+    color: #1e293b;
+    font-size: 20px;
+    margin-bottom: 6px;
+}
+
+.empty-state p {
+    color: #64748b;
+    font-size: 14px;
+}
+
+/* Loading Skeleton / Spinner */
+.loading-indicator {
+    text-align: center;
+    padding: 40px 20px;
+    font-size: 16px;
+    color: #0D6EFD;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Category Badges */
+.badge-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.badge-tag.tech { background: #e0f2fe; color: #0284c7; }
+.badge-tag.workshop { background: #fef3c7; color: #d97706; }
+.badge-tag.academic { background: #dcfce7; color: #16a34a; }
+.badge-tag.seminar { background: #ede9fe; color: #7c3aed; }
+.badge-tag.cultural { background: #ffe4e6; color: #e11d48; }
+
+/* Status Badges */
+.status-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.status-pill.active { background: #dcfce7; color: #15803d; }
+.status-pill.pending { background: #fef9c3; color: #a16207; }
+.status-pill.inactive { background: #fee2e2; color: #b91c1c; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .data-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .toolbar-left, .toolbar-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .search-wrapper {
+        max-width: 100%;
+    }
+}

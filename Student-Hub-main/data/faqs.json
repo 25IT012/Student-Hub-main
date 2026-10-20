@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "category": "General",
+    "question": "What is Student Hub?",
+    "answer": "Student Hub is a centralized digital campus platform where students can access study notes, discover events, register for activities, and check college notices in one place."
+  },
+  {
+    "id": 2,
+    "category": "General",
+    "question": "Who can use Student Hub?",
+    "answer": "Student Hub is designed for all enrolled college students, professors, and academic administrators."
+  },
+  {
+    "id": 3,
+    "category": "General",
+    "question": "Is Student Hub free for all students?",
+    "answer": "Yes, all educational resources, event registrations, and campus updates are free of cost for verified students."
+  },
+  {
+    "id": 4,
+    "category": "Notes",
+    "question": "Where can I find subject study notes?",
+    "answer": "You can visit the Notes section from the navigation menu to browse materials organized by branch and semester."
+  },
+  {
+    "id": 5,
+    "category": "Notes",
+    "question": "Can I download notes for offline viewing?",
+    "answer": "Yes, available PDF resources have a direct download button on each note card."
+  },
+  {
+    "id": 6,
+    "category": "Events",
+    "question": "Where can I view upcoming campus events?",
+    "answer": "Head over to the Events page to see all upcoming hackathons, tech fests, workshops, and cultural fests with date, time, and venue details."
+  },
+  {
+    "id": 7,
+    "category": "Events",
+    "question": "How do I register for an event or workshop?",
+    "answer": "Click the 'Register' or 'View Details' button on any event card with open registration to secure your spot."
+  },
+  {
+    "id": 8,
+    "category": "Account",
+    "question": "How do I view and edit my profile details?",
+    "answer": "Click the Profile link in the top menu to view your student ID, semester, and personal academic information."
+  }
+]

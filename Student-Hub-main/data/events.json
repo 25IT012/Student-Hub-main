@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "title": "Tech Fest 2026",
+    "day": "15",
+    "month": "SEP",
+    "date": "2026-09-15",
+    "time": "10:00 AM - 4:00 PM",
+    "location": "College Campus",
+    "category": "Technical",
+    "description": "Join students for an exciting technology festival featuring project demos, hackathons, and robotics.",
+    "registrationOpen": true
+  },
+  {
+    "id": 2,
+    "title": "Coding Workshop",
+    "day": "22",
+    "month": "SEP",
+    "date": "2026-09-22",
+    "time": "11:00 AM - 2:00 PM",
+    "location": "Computer Lab A",
+    "category": "Workshop",
+    "description": "Learn programming fundamentals, data structures, and algorithms to improve problem-solving skills.",
+    "registrationOpen": true
+  },
+  {
+    "id": 3,
+    "title": "Project Exhibition",
+    "day": "05",
+    "month": "OCT",
+    "date": "2026-10-05",
+    "time": "9:30 AM - 3:00 PM",
+    "location": "Main Auditorium",
+    "category": "Academic",
+    "description": "Showcase innovative engineering and software projects to industry professionals and faculty members.",
+    "registrationOpen": true
+  },
+  {
+    "id": 4,
+    "title": "Career Seminar",
+    "day": "18",
+    "month": "OCT",
+    "date": "2026-10-18",
+    "time": "1:00 PM - 3:00 PM",
+    "location": "Seminar Hall",
+    "category": "Seminar",
+    "description": "Get valuable career guidance, resume tips, and learn about top internship opportunities after graduation.",
+    "registrationOpen": false
+  },
+  {
+    "id": 5,
+    "title": "AI & Machine Learning Bootcamp",
+    "day": "02",
+    "month": "NOV",
+    "date": "2026-11-02",
+    "time": "10:00 AM - 1:00 PM",
+    "location": "Lab 3 & Online",
+    "category": "Technical",
+    "description": "Hands-on introduction to Python, Neural Networks, and creating computer vision applications.",
+    "registrationOpen": true
+  },
+  {
+    "id": 6,
+    "title": "Annual Cultural Gala",
+    "day": "14",
+    "month": "NOV",
+    "date": "2026-11-14",
+    "time": "5:00 PM - 9:00 PM",
+    "location": "Open Air Amphitheatre",
+    "category": "Cultural",
+    "description": "Celebrate music, drama, dance, and creative performances from talented students across all departments.",
+    "registrationOpen": true
+  },
+  {
+    "id": 7,
+    "title": "Cybersecurity & Ethical Hacking",
+    "day": "28",
+    "month": "NOV",
+    "date": "2026-11-28",
+    "time": "2:00 PM - 5:00 PM",
+    "location": "IT Seminar Hall",
+    "category": "Workshop",
+    "description": "Discover common vulnerabilities, network defenses, and penetration testing methodologies with guest experts.",
+    "registrationOpen": true
+  },
+  {
+    "id": 8,
+    "title": "Campus Placement Prep Talk",
+    "day": "08",
+    "month": "DEC",
+    "date": "2026-12-08",
+    "time": "11:30 AM - 1:30 PM",
+    "location": "Conference Room B",
+    "category": "Seminar",
+    "description": "Tips from alumni who secured roles at top tech companies, mock interviews, and aptitude training.",
+    "registrationOpen": false
+  }
+]

@@ -1,0 +1,183 @@
+/* Events Header */
+
+.events-header {
+    background-color: #2563eb;
+
+    color: white;
+
+    text-align: center;
+
+    padding: 70px 20px;
+}
+
+.events-header h1 {
+    font-size: 45px;
+
+    margin-bottom: 15px;
+}
+
+.events-header p {
+    font-size: 18px;
+}
+
+
+/* Events Section */
+
+.events {
+    padding: 60px 10%;
+}
+
+.events > h2 {
+    text-align: center;
+
+    font-size: 32px;
+
+    color: #1e3a8a;
+
+    margin-bottom: 40px;
+}
+
+
+/* Event Container */
+
+.event-container {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 25px;
+}
+
+
+/* Event Card */
+
+.event-card {
+    background-color: white;
+
+    display: flex;
+
+    gap: 25px;
+
+    padding: 25px;
+
+    border-radius: 12px;
+
+    border: 1px solid #ddd;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+
+    transition: 0.3s;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Event Date */
+
+.event-date {
+    min-width: 80px;
+
+    height: 85px;
+
+    background-color: #2563eb;
+
+    color: white;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+.event-date span {
+    font-size: 30px;
+
+    font-weight: bold;
+}
+
+.event-date small {
+    font-size: 14px;
+}
+
+
+/* Event Information */
+
+.event-info h3 {
+    font-size: 22px;
+
+    color: #1e3a8a;
+
+    margin-bottom: 10px;
+}
+
+.event-info p {
+    line-height: 1.5;
+
+    margin-bottom: 10px;
+}
+
+.event-details {
+    font-size: 14px;
+
+    color: #555;
+}
+
+
+/* Button */
+
+.event-info button {
+    background-color: #1e3a8a;
+
+    color: white;
+
+    border: none;
+
+    padding: 10px 18px;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+.event-info button:hover {
+    background-color: #2563eb;
+}
+
+.event-info button.reg-closed {
+    background-color: #94a3b8;
+    cursor: default;
+}
+
+.event-info button.reg-closed:hover {
+    background-color: #64748b;
+}
+
+
+/* Responsive */
+
+@media (max-width: 768px) {
+
+    .event-container {
+        grid-template-columns: 1fr;
+    }
+
+    .events-header h1 {
+        font-size: 35px;
+    }
+
+    .events {
+        padding: 40px 20px;
+    }
+
+}

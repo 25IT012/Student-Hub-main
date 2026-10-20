@@ -1,0 +1,160 @@
+/* Profile Header */
+
+.profile-header {
+    background-color: #2563eb;
+
+    color: white;
+
+    text-align: center;
+
+    padding: 50px 20px;
+}
+
+.profile-photo {
+    width: 120px;
+    height: 120px;
+
+    background-color: white;
+
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 0 auto 15px;
+
+    font-size: 60px;
+}
+
+.profile-header h1 {
+    font-size: 35px;
+
+    margin-bottom: 8px;
+}
+
+.profile-header p {
+    font-size: 17px;
+}
+
+
+/* Profile Container */
+
+.profile-container {
+    max-width: 1000px;
+
+    margin: auto;
+
+    padding: 50px 20px;
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 25px;
+}
+
+
+/* Profile Card */
+
+.profile-card {
+    background-color: white;
+
+    padding: 30px;
+
+    border-radius: 12px;
+
+    border: 1px solid #ddd;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.profile-card h2 {
+    color: #1e3a8a;
+
+    margin-bottom: 20px;
+
+    font-size: 22px;
+}
+
+
+/* Profile Information */
+
+.profile-info p {
+    margin-bottom: 15px;
+
+    line-height: 1.5;
+
+    color: #555;
+}
+
+.profile-info strong {
+    color: #222;
+}
+
+
+/* Skills */
+
+.skills {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+}
+
+.skills span {
+    background-color: #2563eb;
+
+    color: white;
+
+    padding: 8px 15px;
+
+    border-radius: 20px;
+
+    font-size: 14px;
+}
+
+
+/* Buttons */
+
+.profile-buttons {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+}
+
+.profile-buttons button {
+    background-color: #1e3a8a;
+
+    color: white;
+
+    border: none;
+
+    padding: 11px 18px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+.profile-buttons button:hover {
+    background-color: #2563eb;
+}
+
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    .profile-container {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-header h1 {
+        font-size: 28px;
+    }
+
+}

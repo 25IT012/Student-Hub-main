@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "studentId": "STU2026001",
+    "name": "Pruthviraj",
+    "course": "Computer Engineering",
+    "semester": 2,
+    "email": "pruthviraj@example.com",
+    "status": "Active",
+    "attendance": "85%"
+  },
+  {
+    "id": 2,
+    "studentId": "STU2026002",
+    "name": "Rahul Patel",
+    "course": "Computer Engineering",
+    "semester": 4,
+    "email": "rahul.patel@example.com",
+    "status": "Active",
+    "attendance": "92%"
+  },
+  {
+    "id": 3,
+    "studentId": "STU2026003",
+    "name": "Priya Shah",
+    "course": "IT Engineering",
+    "semester": 2,
+    "email": "priya.shah@example.com",
+    "status": "Active",
+    "attendance": "88%"
+  },
+  {
+    "id": 4,
+    "studentId": "STU2026004",
+    "name": "Aman Joshi",
+    "course": "Computer Engineering",
+    "semester": 6,
+    "email": "aman.joshi@example.com",
+    "status": "Pending",
+    "attendance": "74%"
+  },
+  {
+    "id": 5,
+    "studentId": "STU2026005",
+    "name": "Neha Mehta",
+    "course": "Electronics",
+    "semester": 4,
+    "email": "neha.mehta@example.com",
+    "status": "Active",
+    "attendance": "91%"
+  },
+  {
+    "id": 6,
+    "studentId": "STU2026006",
+    "name": "Ananya Sharma",
+    "course": "IT Engineering",
+    "semester": 6,
+    "email": "ananya.s@example.com",
+    "status": "Active",
+    "attendance": "89%"
+  },
+  {
+    "id": 7,
+    "studentId": "STU2026007",
+    "name": "Karan Verma",
+    "course": "Mechanical Engineering",
+    "semester": 2,
+    "email": "karan.v@example.com",
+    "status": "Pending",
+    "attendance": "68%"
+  },
+  {
+    "id": 8,
+    "studentId": "STU2026008",
+    "name": "Sneha Roy",
+    "course": "Civil Engineering",
+    "semester": 4,
+    "email": "sneha.roy@example.com",
+    "status": "Active",
+    "attendance": "94%"
+  },
+  {
+    "id": 9,
+    "studentId": "STU2026009",
+    "name": "Devendra Kumar",
+    "course": "Electrical Engineering",
+    "semester": 8,
+    "email": "devendra.k@example.com",
+    "status": "Inactive",
+    "attendance": "62%"
+  },
+  {
+    "id": 10,
+    "studentId": "STU2026010",
+    "name": "Riya Desai",
+    "course": "Computer Engineering",
+    "semester": 2,
+    "email": "riya.d@example.com",
+    "status": "Active",
+    "attendance": "96%"
+  }
+]

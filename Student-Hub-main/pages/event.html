@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Events - Student Hub</title>
+
+    <link rel="stylesheet" href="../css/event.css">
+    <link rel="stylesheet" href="../css/data-components.css">
+    <link rel="stylesheet" href="../css/dark-theme.css">
+    <script src="../js/data-service.js" defer></script>
+    <script src="../js/events.js" defer></script>
+    <script src="../js/script.js" defer></script>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav>
+
+        <div class="logo">
+            <h2>Student Hub</h2>
+        </div>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="event.html">Events</a>
+            <a href="contact.html">Contact</a>
+            <button type="button" class="theme-toggle-btn">🌙 Dark Mode</button>
+        </div>
+
+    </nav>
+
+
+    <!-- Events Header -->
+    <section class="events-header">
+
+        <h1>Student Events</h1>
+
+        <p>
+            Discover upcoming events, workshops, seminars,
+            competitions and activities.
+        </p>
+
+    </section>
+
+    <!-- Data Controls Toolbar (Search, Filter, Sort) -->
+    <div class="data-toolbar">
+        <div class="toolbar-left">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="eventSearch" placeholder="Search events by name, topic, or venue...">
+            </div>
+            <div class="select-wrapper">
+                <select id="categoryFilter">
+                    <option value="All">All Categories</option>
+                    <option value="Technical">Technical</option>
+                    <option value="Workshop">Workshop</option>
+                    <option value="Academic">Academic</option>
+                    <option value="Seminar">Seminar</option>
+                    <option value="Cultural">Cultural</option>
+                </select>
+            </div>
+        </div>
+        <div class="toolbar-right">
+            <div class="select-wrapper">
+                <select id="eventSort">
+                    <option value="date-asc">Date: Soonest First</option>
+                    <option value="date-desc">Date: Latest First</option>
+                    <option value="title-asc">Title: A to Z</option>
+                    <option value="title-desc">Title: Z to A</option>
+                </select>
+            </div>
+            <span class="results-count" id="eventsCount">Loading events...</span>
+        </div>
+    </div>
+
+    <!-- Events Section -->
+    <section class="events">
+
+        <h2>Campus Events & Activities</h2>
+
+        <!-- Dynamic Events Container -->
+        <div class="event-container" id="eventsContainer">
+            <!-- Dynamically populated from events.json via Fetch API -->
+        </div>
+
+        <!-- Dynamic Pagination Controls -->
+        <div id="paginationContainer"></div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <p>
+            © 2026 Student Hub | Made for Students
+        </p>
+
+    </footer>
+
+</body>
+
+</html>

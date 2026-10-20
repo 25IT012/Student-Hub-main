@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Student Management Module — StudentHub Admin</title>
+
+    <meta name="description"
+        content="Administrative Student Management module to add, view, edit, delete, search, and filter student records with MySQLi prepared statements.">
+
+    <link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        crossorigin="anonymous">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .module-header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #f8fafc;
+            padding: 30px 0 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .module-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .module-header-title h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 4px;
+        }
+        .module-header-title p {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+        .admin-nav-links {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .admin-toolbar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            margin: 24px 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            box-shadow: var(--shadow-sm);
+        }
+        .toolbar-group-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+        .toolbar-group-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .search-icon-wrap {
+            position: relative;
+            display: inline-block;
+        }
+        .search-icon-wrap i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+        .admin-search-input {
+            min-width: 280px;
+            padding: 9px 14px 9px 36px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .admin-search-input:focus {
+            border-color: var(--primary);
+            background: var(--bg-card);
+        }
+        .admin-select {
+            padding: 9px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 9px;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .status-active { background: #dcfce7; color: #15803d; }
+        .status-pending { background: #fef3c7; color: #b45309; }
+        .status-inactive { background: #fee2e2; color: #b91c1c; }
+
+        .modal-large-box {
+            max-width: 660px !important;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .form-grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        @media (max-width: 640px) {
+            .form-grid-2col { grid-template-columns: 1fr; }
+        }
+        .form-group-custom {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 12px;
+        }
+        .form-group-custom label {
+            font-size: 0.825rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .form-group-custom input,
+        .form-group-custom select {
+            padding: 9px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            outline: none;
+        }
+        .form-group-custom input:focus,
+        .form-group-custom select:focus {
+            border-color: var(--primary);
+            background: var(--bg-card);
+        }
+
+        #toastContainer {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .toast-msg {
+            pointer-events: auto;
+            min-width: 300px;
+            max-width: 420px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 18px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .toast-msg.toast-success { border-left: 4px solid #10b981; }
+        .toast-msg.toast-error { border-left: 4px solid #ef4444; }
+        .toast-msg.toast-info { border-left: 4px solid #3b82f6; }
+        @keyframes toastSlideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header / Navbar -->
+    <header class="site-header" id="topHeader">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-logo" aria-label="StudentHub Home">
+                <div class="logo-icon">
+                    <img src="../image/StudentHub LOGO.png" alt="StudentHub Logo" class="brand-img-logo"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                    <i class="fa-solid fa-graduation-cap" aria-hidden="true" style="display:none;"></i>
+                </div>
+                <span class="logo-text">Student<span>Hub</span> <small class="admin-badge">Admin</small></span>
+            </a>
+
+            <nav class="main-nav" id="mainNav" aria-label="Primary Navigation">
+                <ul class="nav-list">
+                    <li><a href="admin.html" class="nav-link"><i class="fa-solid fa-gauge"></i> Overview</a></li>
+                    <li><a href="student_management.html" class="nav-link active" aria-current="page"><i class="fa-solid fa-user-graduate"></i> Students</a></li>
+                    <li><a href="event_management.html" class="nav-link"><i class="fa-solid fa-calendar-days"></i> Events</a></li>
+                    <li><a href="audit_logs.html" class="nav-link"><i class="fa-solid fa-shield-halved"></i> Audit Trail</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <button id="themeToggleBtn" class="theme-toggle" type="button" aria-label="Toggle theme">
+                    <i class="fa-solid fa-moon dark-icon"></i>
+                    <i class="fa-solid fa-sun light-icon"></i>
+                </button>
+                <a href="../php/logout.php" class="btn btn-outline btn-sm">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Module Ribbon -->
+    <div class="module-header">
+        <div class="container">
+            <div class="module-header-flex">
+                <div class="module-header-title">
+                    <h1>Student Management Module</h1>
+                    <p>Live MySQLi CRUD module: Add, View, Edit, Delete, Search, and Multi-filter student records asynchronously.</p>
+                </div>
+                <div class="admin-nav-links">
+                    <button class="btn btn-primary" type="button" onclick="openStudentModal('create')">
+                        <i class="fa-solid fa-user-plus"></i> Add New Student
+                    </button>
+                    <button class="btn btn-outline btn-sm" type="button" style="color:white; border-color:rgba(255,255,255,0.3);" onclick="loadStudents()">
+                        <i class="fa-solid fa-rotate"></i> Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="mainContent" class="container" style="padding: 20px 0 60px;">
+
+        <!-- Toolbar (Search & Filter) -->
+        <div class="admin-toolbar-card">
+            <div class="toolbar-group-left">
+                <div class="search-icon-wrap">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="search" id="studentSearchInput" class="admin-search-input"
+                        placeholder="Search by name, enrollment ID, email, or mobile..."
+                        oninput="debounceSearch()">
+                </div>
+
+                <!-- Department Filter -->
+                <select id="studentDeptFilter" class="admin-select" onchange="loadStudents()">
+                    <option value="All">All Departments</option>
+                    <option value="Computer Engineering">Computer Engineering</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                    <option value="Electrical Engineering">Electrical Engineering</option>
+                    <option value="Civil Engineering">Civil Engineering</option>
+                    <option value="Electronics & Communication">Electronics & Comm.</option>
+                </select>
+
+                <!-- Semester Filter -->
+                <select id="studentSemFilter" class="admin-select" onchange="loadStudents()">
+                    <option value="All">All Semesters</option>
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+                    <option value="7">Semester 7</option>
+                    <option value="8">Semester 8</option>
+                </select>
+
+                <!-- Status Filter -->
+                <select id="studentStatusFilter" class="admin-select" onchange="loadStudents()">
+                    <option value="All">All Statuses</option>
+                    <option value="Active">Active</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </div>
+
+            <div class="toolbar-group-right">
+                <select id="studentSortSelect" class="admin-select" onchange="loadStudents()">
+                    <option value="id_desc">Newest First</option>
+                    <option value="id_asc">Oldest First</option>
+                    <option value="name_asc">Name: A to Z</option>
+                    <option value="name_desc">Name: Z to A</option>
+                    <option value="att_desc">Attendance: Highest</option>
+                </select>
+
+                <button class="btn btn-outline btn-sm" type="button" onclick="resetFilters()">
+                    <i class="fa-solid fa-rotate-left"></i> Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- Students Table Card -->
+        <div class="table-card">
+            <div style="padding: 14px 20px; border-bottom: 1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+                <span id="studentsCountText" style="font-size:0.875rem; font-weight:700; color:var(--text-primary);">
+                    Loading student records...
+                </span>
+                <span style="font-size:0.775rem; color:var(--text-muted);">
+                    MySQLi CRUD via Fetch API &bull; No Page Reload
+                </span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Enrollment ID</th>
+                            <th>Student Name</th>
+                            <th>Department</th>
+                            <th>Semester</th>
+                            <th>Contact</th>
+                            <th>Attendance</th>
+                            <th>Events</th>
+                            <th>Status</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody">
+                        <tr><td colspan="9" style="text-align:center;">Loading students from MySQL database...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal: Add / Edit Student -->
+    <div id="studentFormModal" class="academic-modal" role="dialog" aria-modal="true">
+        <div class="academic-box modal-large-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <h2 id="studentModalTitle" style="margin:0; font-size:1.3rem;">Add New Student</h2>
+                <button type="button" onclick="closeStudentFormModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-muted);">&times;</button>
+            </div>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:18px;">
+                Creates or updates a student record in MySQL using prepared statements with duplicate prevention and bcrypt password hashing.
+            </p>
+
+            <form id="studentCrudForm" onsubmit="handleStudentFormSubmit(event)">
+                <input type="hidden" id="studentFormId" name="id" value="">
+
+                <div class="form-grid-2col">
+                    <div class="form-group-custom">
+                        <label for="sfName">Full Name *</label>
+                        <input type="text" id="sfName" name="name" required placeholder="e.g. Rahul Sharma">
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="sfEnrollment">Enrollment Number *</label>
+                        <input type="text" id="sfEnrollment" name="enrollment_number" required placeholder="e.g. STU2026015">
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="sfEmail">Institutional Email *</label>
+                        <input type="email" id="sfEmail" name="email" required placeholder="e.g. rahul@charusat.edu.in">
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="sfUsername">Username</label>
+                        <input type="text" id="sfUsername" name="username" placeholder="Auto-generated if empty">
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="sfPassword" id="sfPasswordLabel">Password *</label>
+                        <input type="password" id="sfPassword" name="password" placeholder="At least 6 characters">
+                        <small id="sfPasswordHelp" style="font-size:0.75rem; color:var(--text-muted); display:none;">Leave blank to preserve current password</small>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="sfMobile">Contact Mobile</label>
+                        <input type="tel" id="sfMobile" name="mobile" placeholder="e.g. +91 98765 43210">
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="sfCourse">Department / Course *</label>
+                        <select id="sfCourse" name="course_name" required>
+                            <option value="Computer Engineering">Computer Engineering</option>
+                            <option value="Information Technology">Information Technology</option>
+                            <option value="Mechanical Engineering">Mechanical Engineering</option>
+                            <option value="Electrical Engineering">Electrical Engineering</option>
+                            <option value="Civil Engineering">Civil Engineering</option>
+                            <option value="Electronics & Communication">Electronics & Communication</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="sfSemester">Semester *</label>
+                        <select id="sfSemester" name="semester" required>
+                            <option value="1">Semester 1</option>
+                            <option value="2" selected>Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                            <option value="5">Semester 5</option>
+                            <option value="6">Semester 6</option>
+                            <option value="7">Semester 7</option>
+                            <option value="8">Semester 8</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="sfAttendance">Attendance (%)</label>
+                        <input type="number" id="sfAttendance" name="attendance" step="0.1" min="0" max="100" value="85.0">
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="sfCgpa">CGPA</label>
+                        <input type="number" id="sfCgpa" name="cgpa" step="0.01" min="0" max="10" value="8.50">
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="sfCity">City</label>
+                        <input type="text" id="sfCity" name="city" value="Anand">
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="sfStatus">Status</label>
+                        <select id="sfStatus" name="status">
+                            <option value="Active">Active</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="studentFormError" style="display:none; color:#ef4444; font-size:0.85rem; font-weight:600; margin-top:8px;"></div>
+
+                <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px; padding-top:14px; border-top:1px solid var(--border-color);">
+                    <button type="button" class="btn btn-outline" onclick="closeStudentFormModal()">Cancel</button>
+                    <button type="submit" id="studentFormSubmitBtn" class="btn btn-primary">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Student
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Delete Confirmation -->
+    <div id="deleteStudentConfirmModal" class="academic-modal" role="dialog" aria-modal="true">
+        <div class="academic-box" style="max-width: 440px;">
+            <div style="text-align: center; padding: 10px 0;">
+                <div style="width: 54px; height: 54px; border-radius: 50%; background: #fee2e2; color: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin: 0 auto 16px;">
+                    <i class="fa-solid fa-trash-can"></i>
+                </div>
+                <h3 style="margin-bottom: 8px;">Delete Student Record?</h3>
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 20px;">
+                    Are you sure you want to permanently delete <strong id="deleteStudentName">-</strong> (<code id="deleteStudentEnrollment">-</code>)?
+                </p>
+
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button type="button" class="btn btn-outline" style="flex: 1;" onclick="closeDeleteStudentModal()">
+                        Cancel
+                    </button>
+                    <button type="button" id="confirmDeleteStudentBtn" class="btn" style="flex: 1; background: #ef4444; color: white;" onclick="executeStudentDelete()">
+                        Delete Record
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: View Details -->
+    <div id="studentDetailModal" class="academic-modal">
+        <div class="academic-box" style="max-width: 540px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h2 id="modalStudentName" style="margin-bottom:0;">Student Details</h2>
+                <button type="button" onclick="closeStudentModal()" style="background:none; border:none; font-size:1.4rem; cursor:pointer; color:var(--text-muted);">&times;</button>
+            </div>
+            <p style="margin-bottom:14px; font-size: 0.85rem; color:var(--text-secondary);">Comprehensive profile and campus activity record from MySQL</p>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:0.9rem;">
+                <p style="margin:0; padding:6px 0; border-bottom:1px solid var(--border-light);"><strong>Student ID:</strong> <span id="modalStudentId">-</span></p>
+                <p style="margin:0; padding:6px 0; border-bottom:1px solid var(--border-light);"><strong>Department:</strong> <span id="modalStudentDept">-</span></p>
+                <p style="margin:0; padding:6px 0; border-bottom:1px solid var(--border-light);"><strong>Semester:</strong> <span id="modalStudentSem">-</span></p>
+                <p style="margin:0; padding:6px 0; border-bottom:1px solid var(--border-light);"><strong>Status:</strong> <span id="modalStudentStatus">-</span></p>
+                <p style="margin:0; padding:6px 0; border-bottom:1px solid var(--border-light);"><strong>Email:</strong> <span id="modalStudentEmail">-</span></p>
+                <p style="margin:0; padding:6px 0; border-bottom:1px solid var(--border-light);"><strong>Mobile:</strong> <span id="modalStudentMobile">-</span></p>
+                <p style="margin:0; padding:6px 0; border-bottom:1px solid var(--border-light);"><strong>Attendance:</strong> <span id="modalStudentAtt">-</span></p>
+                <p style="margin:0; padding:6px 0; border-bottom:1px solid var(--border-light);"><strong>CGPA:</strong> <span id="modalStudentCgpa">-</span></p>
+                <p style="margin:0; padding:6px 0; border-bottom:1px solid var(--border-light);"><strong>City:</strong> <span id="modalStudentCity">-</span></p>
+                <p style="margin:0; padding:6px 0; border-bottom:1px solid var(--border-light);"><strong>Gender:</strong> <span id="modalStudentGender">-</span></p>
+            </div>
+
+            <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border-color);">
+                <strong style="display:block; margin-bottom: 6px; font-size: 0.9rem;">Enrolled Events:</strong>
+                <p id="modalStudentEvents" style="font-size: 0.875rem; color: var(--primary); font-weight: 500; line-height: 1.5;">None registered</p>
+            </div>
+
+            <button type="button" class="btn btn-primary btn-block" style="margin-top: 20px;" onclick="closeStudentModal()">
+                Close Record
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" aria-live="polite"></div>
+
+    <script src="../js/script.js"></script>
+
+    <script>
+        let allStudents = [];
+        let searchTimer = null;
+        let deleteTargetStudentId = null;
+
+        function debounceSearch() {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(loadStudents, 250);
+        }
+
+        function resetFilters() {
+            document.getElementById("studentSearchInput").value = "";
+            document.getElementById("studentDeptFilter").value = "All";
+            document.getElementById("studentSemFilter").value = "All";
+            document.getElementById("studentStatusFilter").value = "All";
+            document.getElementById("studentSortSelect").value = "id_desc";
+            loadStudents();
+        }
+
+        async function loadStudents() {
+            const search = document.getElementById("studentSearchInput").value.trim();
+            const dept   = document.getElementById("studentDeptFilter").value;
+            const sem    = document.getElementById("studentSemFilter").value;
+            const status = document.getElementById("studentStatusFilter").value;
+            const sort   = document.getElementById("studentSortSelect").value;
+
+            const params = new URLSearchParams();
+            if (search) params.append("search", search);
+            if (dept !== "All") params.append("department", dept);
+            if (sem !== "All") params.append("semester", sem);
+            if (status !== "All") params.append("status", status);
+            if (sort) params.append("sort", sort);
+
+            const tbody = document.getElementById("studentsTableBody");
+            try {
+                const response = await fetch("../php/api_students.php?" + params.toString(), {
+                    method: "GET",
+                    headers: { "Accept": "application/json" }
+                });
+
+                if (response.status === 401) {
+                    window.location.href = "login.html?reason=unauthorized";
+                    return;
+                }
+                if (response.status === 403) {
+                    alert("⛔ Access Denied: Administrator privileges required.");
+                    window.location.href = "dashboard.html?reason=forbidden";
+                    return;
+                }
+
+                const data = await response.json();
+                if (!data.success) throw new Error(data.message || "Failed to load students.");
+
+                allStudents = data.students || [];
+                document.getElementById("studentsCountText").textContent = `Showing ${allStudents.length} student record${allStudents.length === 1 ? '' : 's'}`;
+                renderStudents(allStudents);
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#ef4444;">Error: ${escapeHtml(err.message)}</td></tr>`;
+            }
+        }
+
+        function renderStudents(students) {
+            const tbody = document.getElementById("studentsTableBody");
+            if (!students.length) {
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">No student records match the search & filter criteria.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = students.map(st => {
+                const statusClass = (st.status || 'Active').toLowerCase() === 'active' ? 'status-active'
+                                  : (st.status || '').toLowerCase() === 'pending' ? 'status-pending' : 'status-inactive';
+                const attVal = st.attendance ? parseFloat(st.attendance).toFixed(0) + '%' : 'N/A';
+                const regCount = st.registered_events_count ? (st.registered_events_count + ' events') : '0';
+
+                return `
+                    <tr>
+                        <td><strong>${escapeHtml(st.enrollment_number || '-')}</strong></td>
+                        <td>
+                            <strong>${escapeHtml(st.name || '-')}</strong><br>
+                            <small style="color:var(--text-muted);">@${escapeHtml(st.username || '')}</small>
+                        </td>
+                        <td><span class="dept-badge">${escapeHtml(getDepartment(st.course_name))}</span></td>
+                        <td>${st.semester ? 'Sem ' + escapeHtml(st.semester) : '-'}</td>
+                        <td>
+                            <small>${escapeHtml(st.email || '-')}</small><br>
+                            <small style="color:var(--text-muted);">${escapeHtml(st.mobile || '-')}</small>
+                        </td>
+                        <td><strong style="color:var(--success);">${escapeHtml(attVal)}</strong></td>
+                        <td><span style="font-weight:600; color:var(--primary);">${escapeHtml(regCount)}</span></td>
+                        <td><span class="status-badge ${statusClass}">${escapeHtml(st.status || 'Active')}</span></td>
+                        <td style="text-align: right; white-space: nowrap;">
+                            <button class="btn btn-ghost btn-sm" type="button" title="View Details" onclick='openStudentViewModal(${JSON.stringify(st).replace(/'/g, "&#39;")})'>
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                            <button class="btn btn-ghost btn-sm" type="button" title="Edit Student" onclick='openStudentEditModal(${JSON.stringify(st).replace(/'/g, "&#39;")})'>
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button class="btn btn-ghost btn-sm" type="button" title="Delete Student" style="color:#ef4444;" onclick='openStudentDeleteModal(${st.id}, "${escapeHtml(st.name)}", "${escapeHtml(st.enrollment_number)}")'>
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        // Open Student Modal
+        function openStudentModal(mode, student = null) {
+            const modal = document.getElementById("studentFormModal");
+            const form = document.getElementById("studentCrudForm");
+            const title = document.getElementById("studentModalTitle");
+            const pwLabel = document.getElementById("sfPasswordLabel");
+            const pwInput = document.getElementById("sfPassword");
+            const pwHelp = document.getElementById("sfPasswordHelp");
+            const errBox = document.getElementById("studentFormError");
+
+            errBox.style.display = "none";
+            errBox.textContent = "";
+
+            if (mode === 'create') {
+                title.textContent = "Add New Student";
+                form.reset();
+                document.getElementById("studentFormId").value = "";
+                pwLabel.textContent = "Password *";
+                pwInput.required = true;
+                pwHelp.style.display = "none";
+            } else {
+                title.textContent = "Edit Student Profile";
+                document.getElementById("studentFormId").value = student.id;
+                document.getElementById("sfName").value = student.name || "";
+                document.getElementById("sfEnrollment").value = student.enrollment_number || "";
+                document.getElementById("sfEmail").value = student.email || "";
+                document.getElementById("sfUsername").value = student.username || "";
+                document.getElementById("sfMobile").value = student.mobile || "";
+                document.getElementById("sfCourse").value = student.course_name || "Computer Engineering";
+                document.getElementById("sfSemester").value = student.semester || "2";
+                document.getElementById("sfAttendance").value = student.attendance || "85.0";
+                document.getElementById("sfCgpa").value = student.cgpa || "8.50";
+                document.getElementById("sfCity").value = student.city || "Anand";
+                document.getElementById("sfStatus").value = student.status || "Active";
+
+                pwLabel.textContent = "New Password (Optional)";
+                pwInput.required = false;
+                pwInput.value = "";
+                pwHelp.style.display = "block";
+            }
+
+            modal.classList.add("show");
+        }
+
+        function openStudentEditModal(student) {
+            openStudentModal('edit', student);
+        }
+
+        function closeStudentFormModal() {
+            document.getElementById("studentFormModal").classList.remove("show");
+        }
+
+        // Submit Student Form
+        async function handleStudentFormSubmit(e) {
+            e.preventDefault();
+            const btn = document.getElementById("studentFormSubmitBtn");
+            const errBox = document.getElementById("studentFormError");
+            const form = document.getElementById("studentCrudForm");
+            const formData = new FormData(form);
+            const studentId = document.getElementById("studentFormId").value;
+
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving...`;
+            errBox.style.display = "none";
+
+            try {
+                const isUpdate = Boolean(studentId);
+                const url = "../php/api_students.php" + (isUpdate ? `?action=update&id=${studentId}` : "?action=create");
+
+                const response = await fetch(url, {
+                    method: "POST",
+                    body: formData,
+                    headers: { "Accept": "application/json" }
+                });
+
+                const res = await response.json();
+                if (!response.ok || !res.success) {
+                    throw new Error(res.message || "Failed to process student request.");
+                }
+
+                showToast(res.message, "success");
+                closeStudentFormModal();
+                loadStudents();
+            } catch (err) {
+                errBox.textContent = err.message;
+                errBox.style.display = "block";
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Save Student`;
+            }
+        }
+
+        // Delete Student
+        function openStudentDeleteModal(id, name, enrollment) {
+            deleteTargetStudentId = id;
+            document.getElementById("deleteStudentName").textContent = name;
+            document.getElementById("deleteStudentEnrollment").textContent = enrollment;
+            document.getElementById("deleteStudentConfirmModal").classList.add("show");
+        }
+
+        function closeDeleteStudentModal() {
+            deleteTargetStudentId = null;
+            document.getElementById("deleteStudentConfirmModal").classList.remove("show");
+        }
+
+        async function executeStudentDelete() {
+            if (!deleteTargetStudentId) return;
+            const btn = document.getElementById("confirmDeleteStudentBtn");
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Deleting...`;
+
+            try {
+                const response = await fetch(`../php/api_students.php?action=delete&id=${deleteTargetStudentId}`, {
+                    method: "POST",
+                    headers: { "Accept": "application/json" }
+                });
+                const res = await response.json();
+                if (!response.ok || !res.success) {
+                    throw new Error(res.message || "Failed to delete student.");
+                }
+
+                showToast(res.message, "success");
+                closeDeleteStudentModal();
+                loadStudents();
+            } catch (err) {
+                showToast("Error: " + err.message, "error");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = "Delete Record";
+            }
+        }
+
+        // View Student
+        function openStudentViewModal(student) {
+            document.getElementById("modalStudentName").textContent = student.name || "Student Record";
+            document.getElementById("modalStudentId").textContent = student.enrollment_number || "-";
+            document.getElementById("modalStudentDept").textContent = student.course_name || "-";
+            document.getElementById("modalStudentSem").textContent = student.semester ? ("Semester " + student.semester) : "-";
+            document.getElementById("modalStudentStatus").textContent = student.status || "Active";
+            document.getElementById("modalStudentEmail").textContent = student.email || "-";
+            document.getElementById("modalStudentMobile").textContent = student.mobile || "-";
+            document.getElementById("modalStudentAtt").textContent = student.attendance ? (parseFloat(student.attendance).toFixed(1) + "%") : "N/A";
+            document.getElementById("modalStudentCgpa").textContent = student.cgpa ? parseFloat(student.cgpa).toFixed(2) : "N/A";
+            document.getElementById("modalStudentCity").textContent = student.city || "Anand";
+            document.getElementById("modalStudentGender").textContent = student.gender || "Not Specified";
+            document.getElementById("modalStudentEvents").textContent = student.registered_events_list || "No registered events yet.";
+
+            document.getElementById("studentDetailModal").classList.add("show");
+        }
+
+        function closeStudentModal() {
+            document.getElementById("studentDetailModal").classList.remove("show");
+        }
+
+        // Toast Helper
+        function showToast(message, type = 'info') {
+            const container = document.getElementById("toastContainer");
+            if (!container) return;
+
+            const toast = document.createElement("div");
+            toast.className = `toast-msg toast-${type}`;
+            let icon = 'fa-circle-info';
+            if (type === 'success') icon = 'fa-circle-check';
+            if (type === 'error') icon = 'fa-triangle-exclamation';
+
+            toast.innerHTML = `
+                <i class="fa-solid ${icon}" style="font-size:1.2rem; color:${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};"></i>
+                <div style="flex:1;">${escapeHtml(message)}</div>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function getDepartment(courseName) {
+            if (!courseName) return "-";
+            const name = courseName.toLowerCase();
+            if (name.includes("information")) return "IT";
+            if (name.includes("computer")) return "CE";
+            if (name.includes("mechanical")) return "ME";
+            if (name.includes("electrical")) return "EE";
+            if (name.includes("civil")) return "Civil";
+            if (name.includes("electronics")) return "EC";
+            return courseName;
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        document.addEventListener("DOMContentLoaded", loadStudents);
+    </script>
+</body>
+
+</html>

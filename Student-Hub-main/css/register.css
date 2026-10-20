@@ -1,0 +1,299 @@
+/* ========================================================
+   StudentHub - Student Registration Page
+   ======================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: #f4f7fc;
+    color: #1f2937;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===========================
+   TOP CAMPUS BAR
+=========================== */
+
+.top-campus-bar {
+    background: linear-gradient(135deg, #0D6EFD, #004AAD);
+    color: white;
+    padding: 14px 30px;
+    box-shadow: 0 4px 12px rgba(0, 74, 173, 0.2);
+}
+
+.top-bar-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand-link {
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.brand-link:hover {
+    opacity: 0.95;
+}
+
+.hub-name strong {
+    color: #ffd600;
+}
+
+.portal-tagline {
+    font-size: 15px;
+    font-weight: 500;
+    color: #e0e7ff;
+    letter-spacing: 0.3px;
+}
+
+/* ===========================
+   REGISTRATION WRAPPER & CARD
+=========================== */
+
+.register-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.register-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 820px;
+    padding: 38px 45px;
+    border-radius: 16px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e7eb;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Header */
+.form-header {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.form-header h2 {
+    color: #0D6EFD;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.form-header p {
+    color: #64748b;
+    font-size: 14px;
+}
+
+/* ===========================
+   FORM GRID (2 COLUMNS)
+=========================== */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 26px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1f2937;
+    background-color: #ffffff;
+    transition: all 0.25s ease;
+    outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #0D6EFD;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.18);
+}
+
+.form-group input::placeholder {
+    color: #9ca3af;
+}
+
+.form-group select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+/* Gender Radio Buttons */
+.gender-group {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-top: 10px;
+}
+
+.radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #4b5563;
+    cursor: pointer;
+}
+
+.radio-label input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #0D6EFD;
+    cursor: pointer;
+}
+
+/* ===========================
+   CHECKBOX & GUIDELINES
+=========================== */
+
+.checkbox-group {
+    margin: 22px 0 20px 0;
+}
+
+.checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13.5px;
+    color: #4b5563;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    accent-color: #0D6EFD;
+    cursor: pointer;
+}
+
+/* ===========================
+   SUBMIT BUTTON
+=========================== */
+
+.submit-btn {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, #0D6EFD, #004AAD);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(13, 110, 253, 0.3);
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(135deg, #0056cc, #003a88);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(13, 110, 253, 0.4);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+/* ===========================
+   FORM FOOTER LINKS
+=========================== */
+
+.form-footer {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 14px;
+    color: #64748b;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.form-footer a {
+    color: #0D6EFD;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+    color: #004AAD;
+}
+
+.back-home {
+    font-size: 13px;
+    color: #6b7280 !important;
+}
+
+.back-home:hover {
+    color: #111827 !important;
+}
+
+/* ===========================
+   RESPONSIVE (MOBILE & TABLET)
+=========================== */
+
+@media (max-width: 768px) {
+    .register-card {
+        padding: 28px 22px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .top-bar-content {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .form-header h2 {
+        font-size: 24px;
+    }
+}

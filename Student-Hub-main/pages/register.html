@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration | StudentHub</title>
+    <link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="../css/register.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/script.js" defer></script>
+
+    <style>
+        .form-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+        .form-input, .registration-form input[type="text"], .registration-form input[type="email"], .registration-form input[type="tel"], .registration-form input[type="password"], .registration-form select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.925rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+        .form-input.is-valid {
+            border-color: var(--success) !important;
+        }
+        .form-input.is-invalid {
+            border-color: var(--danger) !important;
+            background-color: rgba(239, 68, 68, 0.02);
+        }
+        .field-feedback {
+            font-size: 0.775rem;
+            margin-top: 4px;
+            min-height: 18px;
+            display: block;
+        }
+        .field-feedback.error {
+            color: var(--danger);
+        }
+        .field-feedback.success {
+            color: var(--success);
+        }
+        .field-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+        .password-strength-bar {
+            height: 4px;
+            width: 100%;
+            background: var(--bg-secondary);
+            border-radius: 2px;
+            margin-top: 6px;
+            overflow: hidden;
+            display: flex;
+        }
+        .password-strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+        .alert-box {
+            display: none;
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        .alert-box.success {
+            background-color: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .alert-box.error {
+            background-color: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Campus Header Bar -->
+    <header class="site-header" id="topHeader">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-logo" aria-label="StudentHub Home">
+                <div class="logo-icon">
+                    <img src="../image/StudentHub LOGO.png" alt="StudentHub Logo" class="brand-img-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                    <i class="fa-solid fa-graduation-cap" aria-hidden="true" style="display:none;"></i>
+                </div>
+                <span class="logo-text">Student<span>Hub</span></span>
+            </a>
+
+            <div class="nav-actions">
+                <button id="themeToggleBtn" class="theme-toggle" type="button" aria-label="Toggle theme">
+                    <i class="fa-solid fa-moon dark-icon"></i>
+                    <i class="fa-solid fa-sun light-icon"></i>
+                </button>
+                <a href="login.html" class="btn btn-outline btn-sm">Already Registered? Sign In</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Registration Section -->
+    <main class="register-wrapper" style="padding: 40px 16px;">
+        <div class="register-card" style="max-width: 820px;">
+            
+            <div class="form-header">
+                <h2>Secure Student Registration</h2>
+                <p>Register your account in the campus MySQL database with encrypted password protection.</p>
+            </div>
+
+            <!-- Notification Banner -->
+            <div id="regAlert" class="alert-box"></div>
+
+            <form id="registrationForm" class="registration-form" novalidate>
+                
+                <div class="form-grid">
+                    
+                    <!-- Full Name -->
+                    <div class="form-group">
+                        <label for="fullName">Full Name *</label>
+                        <input type="text" id="fullName" name="fullName" class="form-input" placeholder="e.g. Pruthviraj Jadeja" required>
+                        <span class="field-feedback" id="nameFeedback"></span>
+                    </div>
+
+                    <!-- Personalized Username -->
+                    <div class="form-group">
+                        <label for="username">Username *</label>
+                        <input type="text" id="username" name="username" class="form-input" placeholder="e.g. pruthvi.raj" required>
+                        <span class="field-feedback" id="usernameFeedback"></span>
+                        <div class="field-hint">3-30 characters: lowercase letters, numbers, or dots.</div>
+                    </div>
+
+                    <!-- Email Address -->
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="student@charusat.edu.in" required>
+                        <span class="field-feedback" id="emailFeedback"></span>
+                    </div>
+
+                    <!-- Mobile Number -->
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number *</label>
+                        <input type="tel" id="mobile" name="mobile" class="form-input" placeholder="10-digit mobile number" maxlength="10" required>
+                        <span class="field-feedback" id="mobileFeedback"></span>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="password">Password *</label>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="Min. 6 characters" required>
+                        <div class="password-strength-bar">
+                            <div class="password-strength-fill" id="strengthFill"></div>
+                        </div>
+                        <span class="field-feedback" id="passwordFeedback"></span>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password *</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" placeholder="Re-enter password" required>
+                        <span class="field-feedback" id="confirmFeedback"></span>
+                    </div>
+
+                    <!-- Course Branch -->
+                    <div class="form-group">
+                        <label for="course">Course Branch *</label>
+                        <select id="course" name="course" class="form-input" required>
+                            <option value="" disabled selected>-- Choose Course --</option>
+                            <option value="Computer Engineering">Computer Engineering</option>
+                            <option value="Information Technology">Information Technology</option>
+                            <option value="Electronics & Communication">Electronics & Communication</option>
+                            <option value="Mechanical Engineering">Mechanical Engineering</option>
+                            <option value="Civil Engineering">Civil Engineering</option>
+                            <option value="Electrical Engineering">Electrical Engineering</option>
+                        </select>
+                        <span class="field-feedback" id="courseFeedback"></span>
+                    </div>
+
+                    <!-- Year of Study -->
+                    <div class="form-group">
+                        <label for="year">Year of Study *</label>
+                        <select id="year" name="year" class="form-input" required>
+                            <option value="" disabled selected>-- Choose Year --</option>
+                            <option value="1st Year">1st Year (Semester 1 & 2)</option>
+                            <option value="2nd Year">2nd Year (Semester 3 & 4)</option>
+                            <option value="3rd Year">3rd Year (Semester 5 & 6)</option>
+                            <option value="4th Year">4th Year (Semester 7 & 8)</option>
+                        </select>
+                        <span class="field-feedback" id="yearFeedback"></span>
+                    </div>
+
+                    <!-- City -->
+                    <div class="form-group">
+                        <label for="city">City / Hometown</label>
+                        <input type="text" id="city" name="city" class="form-input" placeholder="e.g. Anand, Ahmedabad" value="Anand">
+                    </div>
+
+                    <!-- Gender -->
+                    <div class="form-group">
+                        <label>Gender *</label>
+                        <div class="gender-group">
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="Male" checked required>
+                                <span>Male</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="Female">
+                                <span>Female</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="Other">
+                                <span>Other</span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Guidelines Checkbox -->
+                <div class="checkbox-group" style="margin-top: 10px;">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="terms" required checked>
+                        <span>I accept the institutional campus code and acknowledge secure data storage.</span>
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submitBtn" class="submit-btn" style="cursor: pointer; margin-top: 15px;">
+                    <i class="fa-solid fa-user-plus"></i> Complete Registration & Proceed
+                </button>
+
+                <!-- Bottom Links -->
+                <div class="form-footer">
+                    <p>Already have an account? <a href="login.html" style="font-weight: 700; color: var(--primary);">Sign In here</a></p>
+                    <a href="index.html" class="back-home">← Back to Home</a>
+                </div>
+
+            </form>
+
+        </div>
+    </main>
+
+    <footer class="site-footer" style="padding: 24px 0;">
+        <div class="container" style="text-align: center; font-size: 0.825rem; color: var(--text-secondary);">
+            &copy; 2026 StudentHub • CHARUSAT Campus Management System
+        </div>
+    </footer>
+
+    <!-- Interactive Frontend Validation & Submission Script -->
+    <script>
+        const fullNameInput = document.getElementById('fullName');
+        const usernameInput = document.getElementById('username');
+        const emailInput = document.getElementById('email');
+        const mobileInput = document.getElementById('mobile');
+        const passwordInput = document.getElementById('password');
+        const confirmInput = document.getElementById('confirmPassword');
+        const courseSelect = document.getElementById('course');
+        const yearSelect = document.getElementById('year');
+        const submitBtn = document.getElementById('submitBtn');
+        const alertBox = document.getElementById('regAlert');
+        const strengthFill = document.getElementById('strengthFill');
+
+        // Auto-generate suggested username as student enters full name or email
+        fullNameInput.addEventListener('input', () => {
+            validateName();
+            if (!usernameInput.value || usernameInput.dataset.touched !== 'true') {
+                const clean = fullNameInput.value.trim().toLowerCase().replace(/[^a-z0-9]/g, '.').replace(/\.+/g, '.');
+                if (clean) usernameInput.value = clean;
+            }
+        });
+
+        usernameInput.addEventListener('input', () => {
+            usernameInput.dataset.touched = 'true';
+            validateUsername();
+        });
+
+        emailInput.addEventListener('input', validateEmail);
+        mobileInput.addEventListener('input', validateMobile);
+        passwordInput.addEventListener('input', () => {
+            validatePassword();
+            validateConfirm();
+        });
+        confirmInput.addEventListener('input', validateConfirm);
+        courseSelect.addEventListener('change', validateCourse);
+        yearSelect.addEventListener('change', validateYear);
+
+        // Validation Functions
+        function validateName() {
+            const val = fullNameInput.value.trim();
+            const fb = document.getElementById('nameFeedback');
+            if (val.length < 2) {
+                setFieldState(fullNameInput, fb, false, 'Name must be at least 2 characters.');
+                return false;
+            }
+            setFieldState(fullNameInput, fb, true, 'Looks good!');
+            return true;
+        }
+
+        function validateUsername() {
+            const val = usernameInput.value.trim().toLowerCase();
+            const fb = document.getElementById('usernameFeedback');
+            const userRegex = /^[a-z0-9._]{3,30}$/;
+            if (!userRegex.test(val)) {
+                setFieldState(usernameInput, fb, false, 'Must be 3-30 lowercase characters, numbers, or dots.');
+                return false;
+            }
+            setFieldState(usernameInput, fb, true, 'Username format is valid.');
+            return true;
+        }
+
+        function validateEmail() {
+            const val = emailInput.value.trim();
+            const fb = document.getElementById('emailFeedback');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(val)) {
+                setFieldState(emailInput, fb, false, 'Please enter a valid email (e.g. name@student.edu).');
+                return false;
+            }
+            setFieldState(emailInput, fb, true, 'Valid email format.');
+            return true;
+        }
+
+        function validateMobile() {
+            const val = mobileInput.value.trim();
+            const fb = document.getElementById('mobileFeedback');
+            const mobileRegex = /^[0-9]{10}$/;
+            if (!mobileRegex.test(val)) {
+                setFieldState(mobileInput, fb, false, 'Mobile number must be exactly 10 digits.');
+                return false;
+            }
+            setFieldState(mobileInput, fb, true, 'Valid mobile number.');
+            return true;
+        }
+
+        function validatePassword() {
+            const val = passwordInput.value;
+            const fb = document.getElementById('passwordFeedback');
+            
+            // Calculate Strength
+            let score = 0;
+            if (val.length >= 6) score += 1;
+            if (val.length >= 8) score += 1;
+            if (/[0-9]/.test(val)) score += 1;
+            if (/[^A-Za-z0-9]/.test(val)) score += 1;
+
+            if (score <= 1) {
+                strengthFill.style.width = '25%';
+                strengthFill.style.backgroundColor = '#ef4444';
+            } else if (score === 2) {
+                strengthFill.style.width = '50%';
+                strengthFill.style.backgroundColor = '#f59e0b';
+            } else if (score === 3) {
+                strengthFill.style.width = '75%';
+                strengthFill.style.backgroundColor = '#3b82f6';
+            } else {
+                strengthFill.style.width = '100%';
+                strengthFill.style.backgroundColor = '#10b981';
+            }
+
+            if (val.length < 6) {
+                setFieldState(passwordInput, fb, false, 'Password must be at least 6 characters.');
+                return false;
+            }
+            setFieldState(passwordInput, fb, true, 'Password meets length requirement.');
+            return true;
+        }
+
+        function validateConfirm() {
+            const pass = passwordInput.value;
+            const confirmVal = confirmInput.value;
+            const fb = document.getElementById('confirmFeedback');
+
+            if (!confirmVal) {
+                setFieldState(confirmInput, fb, false, 'Please confirm your password.');
+                return false;
+            }
+            if (pass !== confirmVal) {
+                setFieldState(confirmInput, fb, false, 'Passwords do not match.');
+                return false;
+            }
+            setFieldState(confirmInput, fb, true, 'Passwords match!');
+            return true;
+        }
+
+        function validateCourse() {
+            const fb = document.getElementById('courseFeedback');
+            if (!courseSelect.value) {
+                setFieldState(courseSelect, fb, false, 'Please select your course branch.');
+                return false;
+            }
+            setFieldState(courseSelect, fb, true, '');
+            return true;
+        }
+
+        function validateYear() {
+            const fb = document.getElementById('yearFeedback');
+            if (!yearSelect.value) {
+                setFieldState(yearSelect, fb, false, 'Please select your study year.');
+                return false;
+            }
+            setFieldState(yearSelect, fb, true, '');
+            return true;
+        }
+
+        function setFieldState(input, feedbackEl, isValid, msg) {
+            if (isValid) {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+                if (feedbackEl) {
+                    feedbackEl.className = 'field-feedback success';
+                    feedbackEl.textContent = msg;
+                }
+            } else {
+                input.classList.remove('is-valid');
+                input.classList.add('is-invalid');
+                if (feedbackEl) {
+                    feedbackEl.className = 'field-feedback error';
+                    feedbackEl.textContent = msg;
+                }
+            }
+        }
+
+        // Form Submit Handler
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Run all validations
+            const isNameValid = validateName();
+            const isUserValid = validateUsername();
+            const isEmailValid = validateEmail();
+            const isMobileValid = validateMobile();
+            const isPassValid = validatePassword();
+            const isConfirmValid = validateConfirm();
+            const isCourseValid = validateCourse();
+            const isYearValid = validateYear();
+
+            if (!isNameValid || !isUserValid || !isEmailValid || !isMobileValid || !isPassValid || !isConfirmValid || !isCourseValid || !isYearValid) {
+                showAlert('Please correct the highlighted errors before submitting.', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Checking Database & Encrypting...';
+
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch('../php/register_process.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert(`🎉 ${result.message} Redirecting to login page...`, 'success');
+
+                    // Pre-fill login page
+                    try {
+                        localStorage.setItem('studenthub_registered_email', formData.get('email'));
+                    } catch(e) {}
+
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    showAlert(`⚠️ ${result.message || 'Registration could not be completed.'}`, 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Complete Registration & Proceed';
+                }
+            } catch (err) {
+                console.warn('Backend request error:', err);
+                showAlert('Network or server error during registration. Please verify XAMPP Apache & MySQL status.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Complete Registration & Proceed';
+            }
+        });
+
+        function showAlert(msg, type) {
+            alertBox.style.display = 'block';
+            alertBox.className = 'alert-box ' + type;
+            alertBox.innerHTML = msg;
+            alertBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    </script>
+
+</body>
+</html>

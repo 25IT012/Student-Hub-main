@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "title": "Lab Submission Deadline on Friday",
+    "date": "2026-10-09",
+    "priority": "High",
+    "category": "Academic"
+  },
+  {
+    "id": 2,
+    "title": "Workshop Registration is Now Open",
+    "date": "2026-10-12",
+    "priority": "Medium",
+    "category": "Events"
+  },
+  {
+    "id": 3,
+    "title": "National Level Hackathon Announced",
+    "date": "2026-10-18",
+    "priority": "High",
+    "category": "Competitions"
+  },
+  {
+    "id": 4,
+    "title": "Mid-Semester Examination Schedule Released",
+    "date": "2026-10-25",
+    "priority": "High",
+    "category": "Examinations"
+  },
+  {
+    "id": 5,
+    "title": "Library Book Return Grace Period",
+    "date": "2026-10-30",
+    "priority": "Normal",
+    "category": "General"
+  }
+]

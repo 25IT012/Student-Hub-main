@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Event Management Module — StudentHub Admin</title>
+
+    <meta name="description"
+        content="Campus Event Management module with poster file upload, image validation, attendee tracking, and MySQLi prepared statement operations.">
+
+    <link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        crossorigin="anonymous">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .module-header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #f8fafc;
+            padding: 30px 0 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .module-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .module-header-title h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 4px;
+        }
+        .module-header-title p {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+        .admin-nav-links {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .admin-toolbar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            margin: 24px 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            box-shadow: var(--shadow-sm);
+        }
+        .toolbar-group-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+        .toolbar-group-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .search-icon-wrap {
+            position: relative;
+            display: inline-block;
+        }
+        .search-icon-wrap i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+        .admin-search-input {
+            min-width: 280px;
+            padding: 9px 14px 9px 36px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .admin-search-input:focus {
+            border-color: var(--primary);
+            background: var(--bg-card);
+        }
+        .admin-select {
+            padding: 9px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Event Cards Grid */
+        .events-admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .event-admin-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+        .event-admin-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .event-poster-wrapper {
+            width: 100%;
+            height: 180px;
+            background: var(--bg-secondary);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .event-poster-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .event-poster-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .event-poster-placeholder i {
+            font-size: 2.2rem;
+            opacity: 0.6;
+        }
+        .event-card-body {
+            padding: 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .event-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0 0 8px;
+            color: var(--text-primary);
+        }
+        .event-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .event-meta-row i {
+            width: 14px;
+            color: var(--primary);
+        }
+        .event-capacity-bar {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-full);
+            height: 6px;
+            margin: 10px 0 14px;
+            overflow: hidden;
+        }
+        .event-capacity-fill {
+            background: var(--primary);
+            height: 100%;
+            border-radius: var(--radius-full);
+        }
+        .event-card-footer {
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 9px;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .status-active { background: #dcfce7; color: #15803d; }
+        .status-inactive { background: #fee2e2; color: #b91c1c; }
+
+        .modal-large-box {
+            max-width: 680px !important;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .form-grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        @media (max-width: 640px) {
+            .form-grid-2col { grid-template-columns: 1fr; }
+        }
+        .form-group-custom {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 12px;
+        }
+        .form-group-custom label {
+            font-size: 0.825rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .form-group-custom input,
+        .form-group-custom select,
+        .form-group-custom textarea {
+            padding: 9px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            outline: none;
+        }
+        .form-group-custom input:focus,
+        .form-group-custom select:focus,
+        .form-group-custom textarea:focus {
+            border-color: var(--primary);
+            background: var(--bg-card);
+        }
+
+        /* Poster Preview in Modal */
+        .poster-upload-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            text-align: center;
+            background: var(--bg-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .poster-upload-zone:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .poster-preview-box {
+            max-height: 140px;
+            margin-top: 10px;
+            display: none;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        .poster-preview-box img {
+            max-height: 140px;
+            width: auto;
+            object-fit: contain;
+            margin: 0 auto;
+            display: block;
+        }
+
+        #toastContainer {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .toast-msg {
+            pointer-events: auto;
+            min-width: 300px;
+            max-width: 420px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 18px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .toast-msg.toast-success { border-left: 4px solid #10b981; }
+        .toast-msg.toast-error { border-left: 4px solid #ef4444; }
+        .toast-msg.toast-info { border-left: 4px solid #3b82f6; }
+        @keyframes toastSlideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header / Navbar -->
+    <header class="site-header" id="topHeader">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-logo" aria-label="StudentHub Home">
+                <div class="logo-icon">
+                    <img src="../image/StudentHub LOGO.png" alt="StudentHub Logo" class="brand-img-logo"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                    <i class="fa-solid fa-graduation-cap" aria-hidden="true" style="display:none;"></i>
+                </div>
+                <span class="logo-text">Student<span>Hub</span> <small class="admin-badge">Admin</small></span>
+            </a>
+
+            <nav class="main-nav" id="mainNav" aria-label="Primary Navigation">
+                <ul class="nav-list">
+                    <li><a href="admin.html" class="nav-link"><i class="fa-solid fa-gauge"></i> Overview</a></li>
+                    <li><a href="student_management.html" class="nav-link"><i class="fa-solid fa-user-graduate"></i> Students</a></li>
+                    <li><a href="event_management.html" class="nav-link active" aria-current="page"><i class="fa-solid fa-calendar-days"></i> Events</a></li>
+                    <li><a href="audit_logs.html" class="nav-link"><i class="fa-solid fa-shield-halved"></i> Audit Trail</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <button id="themeToggleBtn" class="theme-toggle" type="button" aria-label="Toggle theme">
+                    <i class="fa-solid fa-moon dark-icon"></i>
+                    <i class="fa-solid fa-sun light-icon"></i>
+                </button>
+                <a href="../php/logout.php" class="btn btn-outline btn-sm">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Module Ribbon -->
+    <div class="module-header">
+        <div class="container">
+            <div class="module-header-flex">
+                <div class="module-header-title">
+                    <h1>Campus Event Management Module</h1>
+                    <p>Admin orchestration: Add, View, Update, Delete events, and upload posters with server-side validation.</p>
+                </div>
+                <div class="admin-nav-links">
+                    <button class="btn btn-primary" type="button" onclick="openEventModal('create')">
+                        <i class="fa-solid fa-calendar-plus"></i> Create New Event
+                    </button>
+                    <button class="btn btn-outline btn-sm" type="button" style="color:white; border-color:rgba(255,255,255,0.3);" onclick="loadEvents()">
+                        <i class="fa-solid fa-rotate"></i> Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="mainContent" class="container" style="padding: 20px 0 60px;">
+
+        <!-- Toolbar (Search & Filter) -->
+        <div class="admin-toolbar-card">
+            <div class="toolbar-group-left">
+                <div class="search-icon-wrap">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="search" id="eventSearchInput" class="admin-search-input"
+                        placeholder="Search events by title, description, or location..."
+                        oninput="debounceEventSearch()">
+                </div>
+
+                <select id="eventCategoryFilter" class="admin-select" onchange="loadEvents()">
+                    <option value="All">All Categories</option>
+                    <option value="Technical">Technical</option>
+                    <option value="Workshop">Workshop</option>
+                    <option value="Academic">Academic</option>
+                    <option value="Seminar">Seminar</option>
+                    <option value="Cultural">Cultural</option>
+                </select>
+
+                <select id="eventStatusFilter" class="admin-select" onchange="loadEvents()">
+                    <option value="All">All Statuses</option>
+                    <option value="open">Registration Open</option>
+                    <option value="closed">Registration Closed</option>
+                </select>
+            </div>
+
+            <div class="toolbar-group-right">
+                <button class="btn btn-outline btn-sm" type="button" onclick="resetEventFilters()">
+                    <i class="fa-solid fa-rotate-left"></i> Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- Events Dynamic Grid -->
+        <div id="eventsGridContainer" class="events-admin-grid">
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary);"></i>
+                <p style="margin-top: 10px; color: var(--text-secondary);">Loading campus events from MySQL...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal: Add / Edit Event (Task 2 & 3) -->
+    <div id="eventFormModal" class="academic-modal" role="dialog" aria-modal="true">
+        <div class="academic-box modal-large-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <h2 id="eventModalTitle" style="margin:0; font-size:1.3rem;">Create Campus Event</h2>
+                <button type="button" onclick="closeEventFormModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-muted);">&times;</button>
+            </div>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:18px;">
+                Admins can add, update, and upload posters with server-side file type (JPEG, PNG, WebP) and file size validation (&le; 3MB).
+            </p>
+
+            <form id="eventCrudForm" onsubmit="handleEventFormSubmit(event)" enctype="multipart/form-data">
+                <input type="hidden" id="eventFormId" name="id" value="">
+
+                <div class="form-grid-2col">
+                    <div class="form-group-custom" style="grid-column: 1 / -1;">
+                        <label for="efTitle">Event Title *</label>
+                        <input type="text" id="efTitle" name="title" required placeholder="e.g. National Hackathon 2026">
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="efCategory">Event Category *</label>
+                        <select id="efCategory" name="category" required>
+                            <option value="Technical">Technical</option>
+                            <option value="Workshop">Workshop</option>
+                            <option value="Academic">Academic</option>
+                            <option value="Seminar">Seminar</option>
+                            <option value="Cultural">Cultural</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="efDate">Event Date *</label>
+                        <input type="date" id="efDate" name="event_date" required>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="efTime">Time Slot *</label>
+                        <input type="text" id="efTime" name="event_time" required placeholder="e.g. 10:00 AM - 4:00 PM" value="10:00 AM - 4:00 PM">
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="efLocation">Venue / Location *</label>
+                        <input type="text" id="efLocation" name="location" required placeholder="e.g. Main Auditorium" value="Main Auditorium">
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="efCapacity">Capacity (Max Seats) *</label>
+                        <input type="number" id="efCapacity" name="capacity" min="1" max="5000" value="100" required>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="efRegOpen">Registration Status</label>
+                        <select id="efRegOpen" name="registration_open">
+                            <option value="1">Open for Registration</option>
+                            <option value="0">Closed</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group-custom" style="grid-column: 1 / -1;">
+                        <label for="efDescription">Event Description *</label>
+                        <textarea id="efDescription" name="description" rows="3" required placeholder="Detailed description of the workshop or event..."></textarea>
+                    </div>
+
+                    <!-- Poster Upload with File Validation -->
+                    <div class="form-group-custom" style="grid-column: 1 / -1;">
+                        <label for="efPoster">Event Poster Image (Optional)</label>
+                        <div class="poster-upload-zone" onclick="document.getElementById('efPoster').click()">
+                            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 1.8rem; color: var(--primary); margin-bottom: 6px;"></i>
+                            <p style="margin: 0; font-size: 0.85rem; font-weight: 600;">Click to select event poster</p>
+                            <p style="margin: 4px 0 0; font-size: 0.75rem; color: var(--text-muted);">
+                                Permitted formats: JPG, JPEG, PNG, WebP &bull; Maximum file size: 3 MB
+                            </p>
+                        </div>
+                        <input type="file" id="efPoster" name="poster" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="handlePosterSelection(this)">
+
+                        <div id="posterPreviewContainer" class="poster-preview-box">
+                            <img id="posterPreviewImg" src="" alt="Poster Preview">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="eventFormError" style="display:none; color:#ef4444; font-size:0.85rem; font-weight:600; margin-top:8px;"></div>
+
+                <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px; padding-top:14px; border-top:1px solid var(--border-color);">
+                    <button type="button" class="btn btn-outline" onclick="closeEventFormModal()">Cancel</button>
+                    <button type="submit" id="eventFormSubmitBtn" class="btn btn-primary">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Event
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Delete Event -->
+    <div id="deleteEventConfirmModal" class="academic-modal" role="dialog" aria-modal="true">
+        <div class="academic-box" style="max-width: 440px;">
+            <div style="text-align: center; padding: 10px 0;">
+                <div style="width: 54px; height: 54px; border-radius: 50%; background: #fee2e2; color: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin: 0 auto 16px;">
+                    <i class="fa-solid fa-trash-can"></i>
+                </div>
+                <h3 style="margin-bottom: 8px;">Delete Campus Event?</h3>
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 20px;">
+                    Are you sure you want to delete <strong id="deleteEventTitle">-</strong>?
+                    This will permanently remove the event, its uploaded poster file, and student registrations.
+                </p>
+
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button type="button" class="btn btn-outline" style="flex: 1;" onclick="closeDeleteEventModal()">
+                        Cancel
+                    </button>
+                    <button type="button" id="confirmDeleteEventBtn" class="btn" style="flex: 1; background: #ef4444; color: white;" onclick="executeEventDelete()">
+                        Delete Event
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Event Attendees -->
+    <div id="eventAttendeesModal" class="academic-modal" role="dialog" aria-modal="true">
+        <div class="academic-box modal-large-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h2 id="attendeesEventTitle" style="margin:0; font-size:1.3rem;">Registered Attendees</h2>
+                <button type="button" onclick="closeAttendeesModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-muted);">&times;</button>
+            </div>
+            <p id="attendeesCountSub" style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:16px;">
+                Students enrolled for this event
+            </p>
+
+            <div class="table-card">
+                <div class="table-responsive" style="max-height: 380px;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Enrollment ID</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                                <th>Registration Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventAttendeesTableBody">
+                            <tr><td colspan="6" style="text-align:center;">Loading attendee roster...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-outline btn-block" style="margin-top: 16px;" onclick="closeAttendeesModal()">
+                Close Attendee List
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" aria-live="polite"></div>
+
+    <script src="../js/script.js"></script>
+
+    <script>
+        let allEvents = [];
+        let eventSearchTimer = null;
+        let deleteTargetEventId = null;
+
+        function debounceEventSearch() {
+            clearTimeout(eventSearchTimer);
+            eventSearchTimer = setTimeout(loadEvents, 250);
+        }
+
+        function resetEventFilters() {
+            document.getElementById("eventSearchInput").value = "";
+            document.getElementById("eventCategoryFilter").value = "All";
+            document.getElementById("eventStatusFilter").value = "All";
+            loadEvents();
+        }
+
+        async function loadEvents() {
+            const search   = document.getElementById("eventSearchInput").value.trim();
+            const category = document.getElementById("eventCategoryFilter").value;
+            const status   = document.getElementById("eventStatusFilter").value;
+
+            const params = new URLSearchParams();
+            if (search) params.append("search", search);
+            if (category !== "All") params.append("category", category);
+            if (status !== "All") params.append("status", status);
+
+            const container = document.getElementById("eventsGridContainer");
+            try {
+                const response = await fetch("../php/api_events.php?" + params.toString(), {
+                    method: "GET",
+                    headers: { "Accept": "application/json" }
+                });
+
+                if (response.status === 401) {
+                    window.location.href = "login.html?reason=unauthorized";
+                    return;
+                }
+                if (response.status === 403) {
+                    alert("⛔ Access Denied: Administrator privileges required.");
+                    window.location.href = "dashboard.html?reason=forbidden";
+                    return;
+                }
+
+                const data = await response.json();
+                if (!data.success) throw new Error(data.message || "Failed to load events.");
+
+                allEvents = data.events || [];
+                renderEvents(allEvents);
+            } catch (err) {
+                container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: #ef4444; padding: 30px;">Error: ${escapeHtml(err.message)}</div>`;
+            }
+        }
+
+        function renderEvents(events) {
+            const container = document.getElementById("eventsGridContainer");
+            if (!events.length) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">
+                        <i class="fa-solid fa-calendar-xmark" style="font-size: 2.5rem; opacity: 0.5; margin-bottom: 10px;"></i>
+                        <p>No campus events found matching your criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = events.map(ev => {
+                const isOpen = Number(ev.registration_open) === 1;
+                const statusBadge = isOpen ? '<span class="status-badge status-active">Registration Open</span>'
+                                           : '<span class="status-badge status-inactive">Closed</span>';
+                const regCount = Number(ev.registered_count) || 0;
+                const capacity = Number(ev.capacity) || 100;
+                const percent = Math.min(Math.round((regCount / capacity) * 100), 100);
+
+                const posterHtml = ev.poster_image 
+                    ? `<img src="../${escapeHtml(ev.poster_image)}" class="event-poster-img" alt="${escapeHtml(ev.title)}" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'event-poster-placeholder\\'><i class=\\'fa-solid fa-image\\'></i><span>Poster Missing</span></div>';">`
+                    : `<div class="event-poster-placeholder"><i class="fa-solid fa-calendar-days"></i><span>No Poster Uploaded</span></div>`;
+
+                return `
+                    <div class="event-admin-card">
+                        <div class="event-poster-wrapper">
+                            ${posterHtml}
+                            <span style="position:absolute; top:10px; right:10px;">${statusBadge}</span>
+                            <span class="dept-badge" style="position:absolute; bottom:10px; left:10px; background:rgba(0,0,0,0.65); color:white; border:none;">
+                                ${escapeHtml(ev.category || 'Event')}
+                            </span>
+                        </div>
+
+                        <div class="event-card-body">
+                            <h3 class="event-card-title">${escapeHtml(ev.title)}</h3>
+                            <p style="font-size: 0.825rem; color: var(--text-secondary); margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                ${escapeHtml(ev.description || '')}
+                            </p>
+
+                            <div class="event-meta-row">
+                                <i class="fa-regular fa-calendar"></i>
+                                <span>${escapeHtml(ev.event_date || 'TBD')} &bull; ${escapeHtml(ev.event_time || '')}</span>
+                            </div>
+                            <div class="event-meta-row">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <span>${escapeHtml(ev.location || 'Campus')}</span>
+                            </div>
+
+                            <div style="display:flex; justify-content:space-between; font-size:0.775rem; margin-top:8px; font-weight:600; color:var(--text-secondary);">
+                                <span>Seats Filled:</span>
+                                <span>${regCount} / ${capacity} (${percent}%)</span>
+                            </div>
+                            <div class="event-capacity-bar">
+                                <div class="event-capacity-fill" style="width: ${percent}%;"></div>
+                            </div>
+
+                            <div class="event-card-footer">
+                                <button class="btn btn-ghost btn-sm" type="button" onclick="viewEventAttendees(${ev.id}, '${escapeHtml(ev.title)}')">
+                                    <i class="fa-solid fa-users"></i> ${regCount} Attendees
+                                </button>
+                                <div style="display:flex; gap:6px;">
+                                    <button class="btn btn-ghost btn-sm" type="button" title="Edit Event" onclick='openEventEditModal(${JSON.stringify(ev).replace(/'/g, "&#39;")})'>
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="btn btn-ghost btn-sm" type="button" title="Delete Event" style="color:#ef4444;" onclick="openEventDeleteModal(${ev.id}, '${escapeHtml(ev.title)}')">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        // Open Event Modal
+        function openEventModal(mode, event = null) {
+            const modal = document.getElementById("eventFormModal");
+            const form = document.getElementById("eventCrudForm");
+            const title = document.getElementById("eventModalTitle");
+            const errBox = document.getElementById("eventFormError");
+            const previewBox = document.getElementById("posterPreviewContainer");
+            const previewImg = document.getElementById("posterPreviewImg");
+
+            errBox.style.display = "none";
+            errBox.textContent = "";
+
+            if (mode === 'create') {
+                title.textContent = "Create Campus Event";
+                form.reset();
+                document.getElementById("eventFormId").value = "";
+                previewBox.style.display = "none";
+                previewImg.src = "";
+            } else {
+                title.textContent = "Edit Campus Event";
+                document.getElementById("eventFormId").value = event.id;
+                document.getElementById("efTitle").value = event.title || "";
+                document.getElementById("efCategory").value = event.category || "Technical";
+                document.getElementById("efDate").value = event.event_date || "";
+                document.getElementById("efTime").value = event.event_time || "";
+                document.getElementById("efLocation").value = event.location || "";
+                document.getElementById("efCapacity").value = event.capacity || 100;
+                document.getElementById("efRegOpen").value = Number(event.registration_open) === 1 ? "1" : "0";
+                document.getElementById("efDescription").value = event.description || "";
+
+                if (event.poster_image) {
+                    previewImg.src = "../" + event.poster_image;
+                    previewBox.style.display = "block";
+                } else {
+                    previewBox.style.display = "none";
+                    previewImg.src = "";
+                }
+            }
+
+            modal.classList.add("show");
+        }
+
+        function openEventEditModal(event) {
+            openEventModal('edit', event);
+        }
+
+        function closeEventFormModal() {
+            document.getElementById("eventFormModal").classList.remove("show");
+        }
+
+        // Live poster selection preview with validation
+        function handlePosterSelection(input) {
+            const file = input.files && input.files[0];
+            const previewBox = document.getElementById("posterPreviewContainer");
+            const previewImg = document.getElementById("posterPreviewImg");
+            const errBox = document.getElementById("eventFormError");
+
+            if (!file) return;
+
+            // Validate Size (3MB)
+            if (file.size > 3 * 1024 * 1024) {
+                errBox.textContent = "⚠️ Poster file exceeds 3MB limit. Please select a smaller image.";
+                errBox.style.display = "block";
+                input.value = "";
+                previewBox.style.display = "none";
+                return;
+            }
+
+            // Validate Type
+            const allowed = ["image/jpeg", "image/png", "image/webp"];
+            if (!allowed.includes(file.type)) {
+                errBox.textContent = "⚠️ Unsupported format. Allowed file types: JPEG, PNG, WebP.";
+                errBox.style.display = "block";
+                input.value = "";
+                previewBox.style.display = "none";
+                return;
+            }
+
+            errBox.style.display = "none";
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+                previewBox.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Submit Event Form (Multipart FormData via Fetch API)
+        async function handleEventFormSubmit(e) {
+            e.preventDefault();
+            const btn = document.getElementById("eventFormSubmitBtn");
+            const errBox = document.getElementById("eventFormError");
+            const form = document.getElementById("eventCrudForm");
+            const formData = new FormData(form);
+            const eventId = document.getElementById("eventFormId").value;
+
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving...`;
+            errBox.style.display = "none";
+
+            try {
+                const isUpdate = Boolean(eventId);
+                const url = "../php/api_events.php" + (isUpdate ? `?action=update&id=${eventId}` : "?action=create");
+
+                const response = await fetch(url, {
+                    method: "POST",
+                    body: formData,
+                    headers: { "Accept": "application/json" }
+                });
+
+                const res = await response.json();
+                if (!response.ok || !res.success) {
+                    throw new Error(res.message || "Failed to save event.");
+                }
+
+                showToast(res.message, "success");
+                closeEventFormModal();
+                loadEvents();
+            } catch (err) {
+                errBox.textContent = err.message;
+                errBox.style.display = "block";
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Save Event`;
+            }
+        }
+
+        // Delete Event
+        function openEventDeleteModal(id, title) {
+            deleteTargetEventId = id;
+            document.getElementById("deleteEventTitle").textContent = title;
+            document.getElementById("deleteEventConfirmModal").classList.add("show");
+        }
+
+        function closeDeleteEventModal() {
+            deleteTargetEventId = null;
+            document.getElementById("deleteEventConfirmModal").classList.remove("show");
+        }
+
+        async function executeEventDelete() {
+            if (!deleteTargetEventId) return;
+            const btn = document.getElementById("confirmDeleteEventBtn");
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Deleting...`;
+
+            try {
+                const response = await fetch(`../php/api_events.php?action=delete&id=${deleteTargetEventId}`, {
+                    method: "POST",
+                    headers: { "Accept": "application/json" }
+                });
+                const res = await response.json();
+                if (!response.ok || !res.success) {
+                    throw new Error(res.message || "Failed to delete event.");
+                }
+
+                showToast(res.message, "success");
+                closeDeleteEventModal();
+                loadEvents();
+            } catch (err) {
+                showToast("Error: " + err.message, "error");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = "Delete Event";
+            }
+        }
+
+        // View Attendees
+        async function viewEventAttendees(eventId, eventTitle) {
+            document.getElementById("attendeesEventTitle").textContent = eventTitle;
+            const tbody = document.getElementById("eventAttendeesTableBody");
+            const sub = document.getElementById("attendeesCountSub");
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;"><i class="fa-solid fa-spinner fa-spin"></i> Loading attendees roster...</td></tr>`;
+            document.getElementById("eventAttendeesModal").classList.add("show");
+
+            try {
+                const response = await fetch(`../php/api_events.php?id=${eventId}`, {
+                    method: "GET",
+                    headers: { "Accept": "application/json" }
+                });
+                const res = await response.json();
+                if (!res.success || !res.event) throw new Error("Could not retrieve attendee list.");
+
+                const attendees = res.event.attendees || [];
+                sub.textContent = `${attendees.length} student${attendees.length === 1 ? '' : 's'} registered for this event`;
+
+                if (!attendees.length) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:var(--text-muted);">No student has registered for this event yet.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = attendees.map(att => `
+                    <tr>
+                        <td><strong>${escapeHtml(att.name || '-')}</strong></td>
+                        <td><code>${escapeHtml(att.enrollment_number || '-')}</code></td>
+                        <td>${escapeHtml(att.email || '-')}</td>
+                        <td>${escapeHtml(att.course_name || '-')} (Sem ${escapeHtml(att.semester || 1)})</td>
+                        <td>${escapeHtml(att.registration_date || '-')}</td>
+                        <td><span class="status-badge status-active">${escapeHtml(att.status || 'Confirmed')}</span></td>
+                    </tr>
+                `).join("");
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#ef4444;">${escapeHtml(err.message)}</td></tr>`;
+            }
+        }
+
+        function closeAttendeesModal() {
+            document.getElementById("eventAttendeesModal").classList.remove("show");
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById("toastContainer");
+            if (!container) return;
+
+            const toast = document.createElement("div");
+            toast.className = `toast-msg toast-${type}`;
+            let icon = 'fa-circle-info';
+            if (type === 'success') icon = 'fa-circle-check';
+            if (type === 'error') icon = 'fa-triangle-exclamation';
+
+            toast.innerHTML = `
+                <i class="fa-solid ${icon}" style="font-size:1.2rem; color:${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};"></i>
+                <div style="flex:1;">${escapeHtml(message)}</div>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        document.addEventListener("DOMContentLoaded", loadEvents);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Login — StudentHub</title>
+    <link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" crossorigin="anonymous">
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .login-section {
+            min-height: calc(100vh - 160px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        .login-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 440px;
+            padding: 36px 32px;
+            box-shadow: var(--shadow-lg);
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .login-header h1 {
+            font-size: 1.65rem;
+            margin-bottom: 6px;
+        }
+        .login-header p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+        .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-wrap i.prefix-icon {
+            position: absolute;
+            left: 14px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .form-input {
+            width: 100%;
+            padding: 11px 14px 11px 40px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.925rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+        .toggle-password-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            font-size: 0.95rem;
+        }
+        .toggle-password-btn:hover {
+            color: var(--primary);
+        }
+        .demo-credentials-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            margin-bottom: 22px;
+            font-size: 0.8rem;
+        }
+        .demo-credentials-box strong {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+        .demo-chip {
+            display: inline-block;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 3px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 2px 4px 2px 0;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .demo-chip:hover {
+            background: var(--primary-light);
+        }
+        .login-alert {
+            display: none;
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            margin-bottom: 18px;
+        }
+        .login-alert.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        .login-alert.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Site Header -->
+    <header class="site-header" id="topHeader">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-logo" aria-label="StudentHub Home">
+                <div class="logo-icon">
+                    <img src="../image/StudentHub LOGO.png" alt="StudentHub Logo" class="brand-img-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                    <i class="fa-solid fa-graduation-cap" aria-hidden="true" style="display:none;"></i>
+                </div>
+                <span class="logo-text">Student<span>Hub</span></span>
+            </a>
+
+            <div class="nav-actions">
+                <button id="themeToggleBtn" class="theme-toggle" type="button" aria-label="Toggle theme">
+                    <i class="fa-solid fa-moon dark-icon"></i>
+                    <i class="fa-solid fa-sun light-icon"></i>
+                </button>
+                <a href="register.html" class="btn btn-outline btn-sm">Register</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="login-section">
+        <div class="login-card">
+            
+            <div class="login-header">
+                <div class="logo-icon" style="margin: 0 auto 12px; width: 48px; height: 48px; font-size: 1.5rem;">
+                    <i class="fa-solid fa-user-lock"></i>
+                </div>
+                <h1>Portal Sign In</h1>
+                <p>Enter your Student ID or Email to access your dashboard</p>
+            </div>
+
+            <div id="loginAlert" class="login-alert"></div>
+
+            <!-- Quick Demo Credentials Hint -->
+            <div class="demo-credentials-box">
+                <strong><i class="fa-solid fa-key"></i> Quick Login Credentials:</strong>
+                <div>
+                    Student: <span class="demo-chip" onclick="fillCreds('pruthviraj@example.com', 'student123')">Pruthviraj (Student)</span>
+                    <span class="demo-chip" onclick="fillCreds('STU2026002', 'student123')">STU2026002</span>
+                </div>
+                <div style="margin-top: 4px;">
+                    Admin: <span class="demo-chip" onclick="fillCreds('admin@studenthub.edu', 'admin123')">Administrator</span>
+                </div>
+            </div>
+
+            <form id="loginForm">
+                
+                <!-- Username / Email / ID -->
+                <div class="form-group">
+                    <label for="usernameInput">Student Email or Enrollment ID</label>
+                    <div class="input-wrap">
+                        <i class="fa-solid fa-id-card prefix-icon"></i>
+                        <input type="text" id="usernameInput" name="username" class="form-input" placeholder="e.g. pruthviraj@example.com or STU2026001" required autofocus>
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <label for="passwordInput" style="margin-bottom: 0;">Password</label>
+                        <a href="register.html" style="font-size: 0.775rem; color: var(--primary); text-decoration: none;">Forgot password?</a>
+                    </div>
+                    <div class="input-wrap">
+                        <i class="fa-solid fa-lock prefix-icon"></i>
+                        <input type="password" id="passwordInput" name="password" class="form-input" placeholder="Enter your account password" required>
+                        <button type="button" class="toggle-password-btn" id="togglePasswordBtn" aria-label="Toggle password visibility">
+                            <i class="fa-solid fa-eye" id="toggleIcon"></i>
+                        </button>
+                    </div>
+                <!-- Remember Me Checkbox -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                    <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer; color: var(--text-secondary); margin-bottom: 0;">
+                        <input type="checkbox" id="rememberMeInput" name="rememberMe" style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer;">
+                        <span>Remember me on this device (30 days)</span>
+                    </label>
+                </div>
+
+                <button type="submit" id="loginSubmitBtn" class="btn btn-primary btn-block" style="padding: 12px; font-size: 1rem;">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login to Dashboard
+                </button>
+
+            </form>
+
+            <div style="text-align: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-color); font-size: 0.875rem;">
+                <p style="color: var(--text-secondary);">
+                    New student? <a href="register.html" style="color: var(--primary); font-weight: 700; text-decoration: none;">Create an account</a>
+                </p>
+                <a href="index.html" style="display: inline-block; margin-top: 8px; color: var(--text-muted); font-size: 0.825rem; text-decoration: none;">
+                    ← Return to Home
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="site-footer" style="padding: 24px 0;">
+        <div class="container" style="text-align: center; font-size: 0.825rem; color: var(--text-secondary);">
+            &copy; 2026 StudentHub • CHARUSAT Campus Management System
+        </div>
+    </footer>
+
+    <!-- Global Scripts -->
+    <script src="../js/script.js"></script>
+
+    <script>
+        // Handle notification messages from URL parameters (e.g. timeout, logout, unauthorized)
+        document.addEventListener('DOMContentLoaded', () => {
+            const registeredEmail = localStorage.getItem('studenthub_registered_email');
+            if (registeredEmail) {
+                document.getElementById('usernameInput').value = registeredEmail;
+                localStorage.removeItem('studenthub_registered_email');
+            }
+
+            const alertBox = document.getElementById('loginAlert');
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('reason') === 'timeout') {
+                alertBox.className = 'login-alert error';
+                alertBox.style.display = 'block';
+                alertBox.innerHTML = '⏱️ <strong>Session Timeout:</strong> Your session has expired due to 15 minutes of inactivity. Please sign in again.';
+            } else if (urlParams.get('reason') === 'unauthorized') {
+                alertBox.className = 'login-alert error';
+                alertBox.style.display = 'block';
+                alertBox.innerHTML = '🔒 <strong>Restricted Area:</strong> Please log in with your credentials to access your dashboard.';
+            } else if (urlParams.get('reason') === 'forbidden') {
+                alertBox.className = 'login-alert error';
+                alertBox.style.display = 'block';
+                alertBox.innerHTML = '⛔ <strong>Access Denied:</strong> Administrator privileges are required to view that area.';
+            } else if (urlParams.get('logout') === 'success') {
+                alertBox.className = 'login-alert success';
+                alertBox.style.display = 'block';
+                alertBox.innerHTML = '✅ You have been logged out securely. All session cookies and tokens were cleared.';
+            }
+        });
+
+        // Quick Creds Helper
+        function fillCreds(u, p) {
+            document.getElementById('usernameInput').value = u;
+            document.getElementById('passwordInput').value = p;
+        }
+
+        // Toggle Password Visibility
+        const toggleBtn = document.getElementById('togglePasswordBtn');
+        const passwordInput = document.getElementById('passwordInput');
+        const toggleIcon = document.getElementById('toggleIcon');
+
+        toggleBtn.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            toggleIcon.className = isPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+        });
+
+        // Handle Login Submission
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('loginSubmitBtn');
+            const alertBox = document.getElementById('loginAlert');
+            const username = document.getElementById('usernameInput').value.trim();
+            const password = document.getElementById('passwordInput').value;
+            const rememberMe = document.getElementById('rememberMeInput').checked;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authenticating...';
+
+            alertBox.style.display = 'none';
+
+            try {
+                const response = await fetch('../php/login_process.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, rememberMe })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alertBox.className = 'login-alert success';
+                    alertBox.style.display = 'block';
+                    alertBox.innerHTML = `✅ ${result.message}`;
+
+                    // Save active user in localStorage
+                    if (result.user) {
+                        localStorage.setItem('studenthub_active_user', JSON.stringify(result.user));
+                    }
+
+                    setTimeout(() => {
+                        window.location.href = result.redirect || 'dashboard.html';
+                    }, 800);
+                } else {
+                    alertBox.className = 'login-alert error';
+                    alertBox.style.display = 'block';
+                    alertBox.innerHTML = `⚠️ ${result.message || 'Invalid credentials.'}`;
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Login to Dashboard';
+                }
+            } catch (error) {
+                console.warn('Backend login notice, demo redirecting:', error);
+                // Demo fallback
+                if (username.toLowerCase().includes('admin')) {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
